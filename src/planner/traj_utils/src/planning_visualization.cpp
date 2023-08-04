@@ -200,6 +200,18 @@ namespace ego_planner
       line_size_      = 0;
       break;
     }
+    
+    case FORMATION_TYPE::REGULAR_TRIANGLE:
+    {
+      formation_size_ = 3;
+      line_size_ = 3;
+      line_begin_.resize(line_size_);
+      line_end_.resize(line_size_);
+      line_begin_ = {0, 0, 1};
+      line_end_ = {1, 2, 2};
+      
+      break;
+    }
 
     case FORMATION_TYPE::REGULAR_HEXAGON:
     {

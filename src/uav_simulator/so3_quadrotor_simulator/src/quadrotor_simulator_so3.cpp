@@ -306,7 +306,7 @@ void
 stateToOdomMsg(const QuadrotorSimulator::Quadrotor::State& state,
                nav_msgs::Odometry&                         odom)
 {
-  odom.pose.pose.position.x = state.x(0);
+  odom.pose.pose.position.x = state.x(0); 
   odom.pose.pose.position.y = state.x(1);
   odom.pose.pose.position.z = state.x(2);
 

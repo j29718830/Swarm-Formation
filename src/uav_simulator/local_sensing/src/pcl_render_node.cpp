@@ -175,7 +175,7 @@ void rcvGlobalPointCloudCallBack(const sensor_msgs::PointCloud2 & pointcloud_map
   if(has_global_map)
     return;
 
-  ROS_WARN("Global Pointcloud received..");
+  ROS_WARN("Global Pointcloud received....");
   //load global map
   pcl::PointCloud<pcl::PointXYZ> cloudIn;
   pcl::PointXYZ pt_in;
@@ -197,7 +197,7 @@ void rcvGlobalPointCloudCallBack(const sensor_msgs::PointCloud2 & pointcloud_map
 
 void rcvLocalPointCloudCallBack(const sensor_msgs::PointCloud2 & pointcloud_map )
 {
-  //ROS_WARN("Local Pointcloud received..");
+  ROS_WARN("Local Pointcloud received..");
   //load local map
   pcl::PointCloud<pcl::PointXYZ> cloudIn;
   pcl::PointXYZ pt_in;
@@ -323,7 +323,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "pcl_render");
   ros::NodeHandle nh("~");
 
-  nh.getParam("cam_width", width);
+  nh.getParam("cam_width", width); //camera.yaml set the parameter of camera
   nh.getParam("cam_height", height);
   nh.getParam("cam_fx", fx);
   nh.getParam("cam_fy", fy);

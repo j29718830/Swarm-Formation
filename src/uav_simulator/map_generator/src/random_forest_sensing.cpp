@@ -305,10 +305,10 @@ void RandomMapGenerateCylinder()
   _map_ok = true;
 }
 
-void FixMapGenerate(){
- 
+void FixMapGenerate()
+{
   switch (fix_obs_type_)
-  {
+  {    
     case 0: // NONE_FIX
     {
       break;
@@ -333,10 +333,23 @@ void FixMapGenerate(){
       GenerateWall(x_l, x_h, y_l, y_h, z_l, z_h, cloudMap);
       break;
     }
-
+    
+    case 2: // TWO_WALL
+    { 
+      double x_l, x_h, y_l, y_h, z_l, z_h; // low & high
+      x_l = -3.2; x_h = 3.2; y_l = -_y_size / 2; y_h = -0.8; z_l = -3.0; z_h = _z_size;
+      GenerateWall(x_l, x_h, y_l, y_h, z_l, z_h, cloudMap);
+      x_l = -3.2; x_h = 3.2; y_l = 0.8; y_h = _y_size / 2; z_l = -3.0; z_h = _z_size;
+      GenerateWall(x_l, x_h, y_l, y_h, z_l, z_h, cloudMap);
+      cloudMap.width = cloudMap.points.size();
+      cloudMap.height = 1;
+      cloudMap.is_dense = true;
+      ROS_WARN("Finished generate fixed map ");
+      kdtreeLocalMap.setInputCloud(cloudMap.makeShared());
+      _map_ok = true;
+      break;
+    }
   }
-
-  ROS_WARN("Finished generate fixed map ");
 }
 
 void clickCallback(const geometry_msgs::PoseStamped &msg)

@@ -793,6 +793,35 @@ void GridMap::odomCallback(const nav_msgs::OdometryConstPtr &odom)
   if (md_.has_first_depth_)
     return;
 
+  //print odom
+  /*
+  cout << "position x: "<<odom->pose.pose.position.x << endl;
+  cout << "position y: "<<odom->pose.pose.position.y << endl;
+  cout << "position z: "<<odom->pose.pose.position.z << endl;
+
+  cout << "orientation w: "<<odom->pose.pose.orientation.w << endl;
+  cout << "orientation x: "<<odom->pose.pose.orientation.x << endl;
+  cout << "orientation y: "<<odom->pose.pose.orientation.y << endl;
+  cout << "orientation z: "<<odom->pose.pose.orientation.z << endl;
+
+  if((odom->twist.twist.linear.x)==(odom->twist.twist.linear.x)){
+    cout << "linear x: "<<odom->twist.twist.linear.x << endl;
+    cout << "linear y: "<<odom->twist.twist.linear.y << endl;
+    cout << "linear z: "<<odom->twist.twist.linear.z << endl;
+  }
+  else{
+    cout <<"linear is not defined yet" << endl;
+  }
+  
+  if((odom->twist.twist.angular.x)==(odom->twist.twist.angular.x)){
+    cout << "angular x: "<<odom->twist.twist.angular.x << endl;
+    cout << "angular y: "<<odom->twist.twist.angular.y << endl;
+    cout << "angular z: "<<odom->twist.twist.angular.z << endl;
+  }
+  else{
+    cout <<"angular is not defined yet" << endl;
+  }
+*/
   md_.camera_pos_(0) = odom->pose.pose.position.x;
   md_.camera_pos_(1) = odom->pose.pose.position.y;
   md_.camera_pos_(2) = odom->pose.pose.position.z;
@@ -802,7 +831,29 @@ void GridMap::odomCallback(const nav_msgs::OdometryConstPtr &odom)
 
 void GridMap::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &img)
 {
+  
+  //print PointCloud2
+  
+  /*
+  cout <<"header: "<< img->header << endl;
+  cout <<"field size:" <<sizeof(img->fields) <<endl;
+  for(auto iter:img->fields){
+    cout << "field: " << iter << endl;
+  } 
 
+  cout <<"height: "<< img->height << endl;
+  cout <<"width: "<< img->width << endl;
+  cout <<"point_step: "<< img->point_step << endl;
+  cout <<"row_step: "<< img->row_step << endl;
+  cout <<"is_bigendian: "<< boolalpha << int(img->is_bigendian) << endl;
+  cout <<"is_dense: "<< boolalpha << int(img->is_dense) << endl;
+  cout <<"data: ";
+  for(auto iter:img->data){
+    cout << float(iter) << ",";
+  } 
+  cout << endl;
+  cout << "---------" << endl;
+  */
   pcl::PointCloud<pcl::PointXYZ> latest_cloud;
   pcl::fromROSMsg(*img, latest_cloud);
 
@@ -825,6 +876,19 @@ void GridMap::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &img)
 
   pcl::PointXYZ pt;
   Eigen::Vector3d p3d, p3d_inf;
+
+
+  //print pointXYZ
+/*  
+  cout << "height:" <<latest_cloud.height << endl;
+  cout << "width:" <<latest_cloud.width << endl;
+*/   
+  for (size_t i = 0; i < latest_cloud.points.size(); ++i){
+    pt = latest_cloud.points[i];
+    cout<<"x:"<<pt.x<<" ,y:"<<pt.y<<" ,z:"<<pt.z<<endl;
+  }
+  
+ cout << "the number of points:" << latest_cloud.points.size() << endl;
 
   int inf_step = ceil(mp_.obstacles_inflation_ / mp_.resolution_);
   int inf_step_z = 1;

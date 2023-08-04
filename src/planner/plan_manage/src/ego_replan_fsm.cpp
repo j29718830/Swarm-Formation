@@ -283,7 +283,7 @@ namespace ego_planner
   {
 
     LocalTrajData *info = &planner_manager_->traj_.local_traj;
-    auto map = planner_manager_->grid_map_;
+    auto map = planner_manager_->grid_map_; //highlight
 
     if (exec_state_ == WAIT_TARGET || info->traj_id <= 0)
       return;

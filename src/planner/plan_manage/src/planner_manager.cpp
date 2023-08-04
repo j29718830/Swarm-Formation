@@ -249,7 +249,7 @@ namespace ego_planner
     static int count_success = 0;
     sum_time += (t_init + t_opt).toSec();
     count_success++;
-    cout << "total time:\033[42m" << (t_init + t_opt).toSec()
+    cout << "\033[42mtotal time:" << (t_init + t_opt).toSec()
          << "\033[0m,init:" << t_init.toSec()
          << ",optimize:" << t_opt.toSec()
          << ",avg_time=" << sum_time / count_success
