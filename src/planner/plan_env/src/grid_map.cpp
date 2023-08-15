@@ -882,13 +882,14 @@ void GridMap::cloudCallback(const sensor_msgs::PointCloud2ConstPtr &img)
 /*  
   cout << "height:" <<latest_cloud.height << endl;
   cout << "width:" <<latest_cloud.width << endl;
-*/   
+  
   for (size_t i = 0; i < latest_cloud.points.size(); ++i){
     pt = latest_cloud.points[i];
     cout<<"x:"<<pt.x<<" ,y:"<<pt.y<<" ,z:"<<pt.z<<endl;
   }
   
  cout << "the number of points:" << latest_cloud.points.size() << endl;
+*/ 
 
   int inf_step = ceil(mp_.obstacles_inflation_ / mp_.resolution_);
   int inf_step_z = 1;

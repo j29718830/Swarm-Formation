@@ -10,6 +10,7 @@
 #include <sstream>
 #include <iomanip>
 #include <chrono>
+using namespace std;
 
 ros::Publisher pos_cmd_pub;
 
@@ -298,6 +299,20 @@ void cmdCallback(const ros::TimerEvent &e)
 
   last_yaw_ = cmd.yaw;
 
+  
+	//print position command
+  /*
+  cout << "stamp: " << cmd.header.stamp << endl;
+	cout << "trajectory_id: " <<cmd.trajectory_id << endl;
+	cout << "position x:"<< cmd.position.x <<" ,y:"<< cmd.position.y <<" ,z:"<< cmd.position.z <<endl;
+	cout << "velocity x:"<< cmd.velocity.x <<" ,y:"<< cmd.velocity.y <<" ,z:"<< cmd.velocity.z <<endl;
+	cout << "acceleration x:"<< cmd.acceleration.x <<" ,y:"<< cmd.acceleration.y <<" ,z:"<< cmd.acceleration.z <<endl;
+	cout << "yaw: " <<cmd.yaw << endl;
+	cout << "yaw_dot: " <<cmd.yaw_dot << endl;
+	cout << "kx: " << cmd.kx[0] << " " << cmd.kx[1] << " " << cmd.kx[2] << endl;
+	cout << "kv: " << cmd.kv[0] << " " << cmd.kv[1] << " " << cmd.kv[2] << endl;
+  */
+ 
   pos_cmd_pub.publish(cmd);
 }
 
