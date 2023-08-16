@@ -66,7 +66,7 @@ void polyTrajCallback(traj_utils::PolyTrajPtr msg)
     ROS_ERROR("[traj_server] WRONG trajectory parameters, ");
     return;
   }
-
+  cout << "poly" <<endl;
   int piece_nums = msg->duration.size();
   std::vector<double> dura(piece_nums);
   std::vector<poly_traj::CoefficientMat> cMats(piece_nums);
@@ -84,7 +84,7 @@ void polyTrajCallback(traj_utils::PolyTrajPtr msg)
   }
 
   traj_.reset(new poly_traj::Trajectory(dura, cMats));
-
+  
   start_time_ = msg->start_time;
   traj_duration_ = traj_->getTotalDuration();
   traj_id_ = msg->traj_id;
@@ -301,6 +301,8 @@ void cmdCallback(const ros::TimerEvent &e)
 
   
 	//print position command
+  
+  cout << "stamp: " << cmd.header.stamp << endl;
   /*
   cout << "stamp: " << cmd.header.stamp << endl;
 	cout << "trajectory_id: " <<cmd.trajectory_id << endl;

@@ -36,7 +36,8 @@ namespace ego_planner
     for (int i=0; i<formation_size_; i++)
       swarm_odom[i] = Eigen::Vector3d::Zero();
     
-    drone_0_odom_sub_ = nh.subscribe("/drone_0_visual_slam/odom", 1, &PlanningVisualization::drone_0_odomeCallback, this);
+    drone_0_odom_sub_ = nh.subscribe("/vins_estimator/odometry", 1, &PlanningVisualization::drone_0_odomeCallback, this);
+    /*
     drone_1_odom_sub_ = nh.subscribe("/drone_1_visual_slam/odom", 1, &PlanningVisualization::drone_1_odomeCallback, this);
     drone_2_odom_sub_ = nh.subscribe("/drone_2_visual_slam/odom", 1, &PlanningVisualization::drone_2_odomeCallback, this);
     drone_3_odom_sub_ = nh.subscribe("/drone_3_visual_slam/odom", 1, &PlanningVisualization::drone_3_odomeCallback, this);
@@ -48,7 +49,7 @@ namespace ego_planner
     drone_9_odom_sub_ = nh.subscribe("/drone_9_visual_slam/odom", 1, &PlanningVisualization::drone_9_odomeCallback, this);
     drone_10_odom_sub_ = nh.subscribe("/drone_10_visual_slam/odom", 1, &PlanningVisualization::drone_10_odomeCallback, this);
     drone_11_odom_sub_ = nh.subscribe("/drone_11_visual_slam/odom", 1, &PlanningVisualization::drone_11_odomeCallback, this);
-    
+    */
     
     if (drone_id_ == 0){
       swarm_graph_visual_timer_ = nh.createTimer(ros::Duration(0.01), &PlanningVisualization::swarmGraphVisulCallback, this);
@@ -110,10 +111,10 @@ namespace ego_planner
   void PlanningVisualization::drone_0_odomeCallback(const nav_msgs::OdometryConstPtr &msg){
     if (formation_size_ <=0 )
       return;
-    
+    cout << "has odom" <<endl;
     swarm_odom[0] << msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z;
   }
-
+/*
   void PlanningVisualization::drone_1_odomeCallback(const nav_msgs::OdometryConstPtr &msg){
     if (formation_size_ <=1 )
       return;
@@ -190,7 +191,7 @@ namespace ego_planner
     
     swarm_odom[11] << msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z;
   }
-
+*/
   void PlanningVisualization::initSwarmGraphVisual(){
     switch (formation_type_)
     {

@@ -69,7 +69,7 @@ namespace ego_planner
     exec_timer_ = nh.createTimer(ros::Duration(0.01), &EGOReplanFSM::execFSMCallback, this);
     safety_timer_ = nh.createTimer(ros::Duration(0.05), &EGOReplanFSM::checkCollisionCallback, this);
 
-    odom_sub_ = nh.subscribe("odom_world", 1, &EGOReplanFSM::odometryCallback, this);
+    odom_sub_ = nh.subscribe("/vins_estimator/odometry", 1, &EGOReplanFSM::odometryCallback, this);
 
     broadcast_ploytraj_pub_ = nh.advertise<traj_utils::PolyTraj>("planning/broadcast_traj_send", 10);
     broadcast_ploytraj_sub_ = nh.subscribe<traj_utils::PolyTraj>("planning/broadcast_traj_recv", 100,
@@ -100,7 +100,7 @@ namespace ego_planner
         ros::Duration(0.001).sleep();
       }
       ROS_WARN("Waiting for trigger from [n3ctrl] from RC");
-
+      cout << have_trigger_ <<endl;
       while (ros::ok() && (!have_odom_ || !have_trigger_))
       {
         ros::spinOnce();
@@ -111,7 +111,7 @@ namespace ego_planner
       planner_manager_->global_start_time_ = ros::Time::now();
       planner_manager_->start_flag_ = true;
       start_pub_.publish(flag_msg);
-      planGlobalTrajbyGivenWps();
+      planGlobalTrajbyGivenWps();  
     }
     else if (target_type_ == TARGET_TYPE::SWARM_MANUAL_TARGET)
     {
@@ -435,6 +435,7 @@ namespace ego_planner
 
   void EGOReplanFSM::odometryCallback(const nav_msgs::OdometryConstPtr &msg)
   {
+    
     odom_pos_(0) = msg->pose.pose.position.x;
     odom_pos_(1) = msg->pose.pose.position.y;
     odom_pos_(2) = msg->pose.pose.position.z;
@@ -709,7 +710,7 @@ namespace ego_planner
     }
     else
       return;
-
+    cout << "2222222222222222222222"<<endl;
     bool success = planner_manager_->planGlobalTrajWaypoints(odom_pos_, Eigen::Vector3d::Zero(),
                                                              Eigen::Vector3d::Zero(), wps,
                                                              Eigen::Vector3d::Zero(),
