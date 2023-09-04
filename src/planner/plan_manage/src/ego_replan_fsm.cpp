@@ -69,7 +69,7 @@ namespace ego_planner
     exec_timer_ = nh.createTimer(ros::Duration(0.01), &EGOReplanFSM::execFSMCallback, this);
     safety_timer_ = nh.createTimer(ros::Duration(0.05), &EGOReplanFSM::checkCollisionCallback, this);
 
-    odom_sub_ = nh.subscribe("/vins_estimator/odometry", 1, &EGOReplanFSM::odometryCallback, this);
+    odom_sub_ = nh.subscribe("odom_world", 1, &EGOReplanFSM::odometryCallback, this);
 
     broadcast_ploytraj_pub_ = nh.advertise<traj_utils::PolyTraj>("planning/broadcast_traj_send", 10);
     broadcast_ploytraj_sub_ = nh.subscribe<traj_utils::PolyTraj>("planning/broadcast_traj_recv", 100,
@@ -100,7 +100,7 @@ namespace ego_planner
         ros::Duration(0.001).sleep();
       }
       ROS_WARN("Waiting for trigger from [n3ctrl] from RC");
-      cout << have_trigger_ <<endl;
+      
       while (ros::ok() && (!have_odom_ || !have_trigger_))
       {
         ros::spinOnce();
@@ -159,8 +159,9 @@ namespace ego_planner
     {
       if (planner_manager_->pp_.drone_id <= 0 || (planner_manager_->pp_.drone_id >= 1 && have_recv_pre_agent_))
       {
+        
         bool success = planFromGlobalTraj(1);
-
+        
         if (success)
         {
           changeFSMExecState(EXEC_TRAJ, "FSM");
@@ -384,7 +385,7 @@ namespace ego_planner
 
   void EGOReplanFSM::waypointCallback(const geometry_msgs::PoseStampedPtr &msg)
   {
-    if (msg->pose.position.z < -0.1)
+    if (msg->pose.position.z < -2.0) //origin value:-0.1
       return;
 
     cout << "Triggered!" << endl;
@@ -439,7 +440,7 @@ namespace ego_planner
     odom_pos_(0) = msg->pose.pose.position.x;
     odom_pos_(1) = msg->pose.pose.position.y;
     odom_pos_(2) = msg->pose.pose.position.z;
-
+    //cout << "odom_pos_" << odom_pos_ <<endl;
     odom_vel_(0) = msg->twist.twist.linear.x;
     odom_vel_(1) = msg->twist.twist.linear.y;
     odom_vel_(2) = msg->twist.twist.linear.z;
@@ -631,7 +632,7 @@ namespace ego_planner
   
   void EGOReplanFSM::formationWaypointCallback(const geometry_msgs::PoseStampedPtr &msg)
   {
-    if (msg->pose.position.z < -0.1)
+    if (msg->pose.position.z < -2.0) //origin value:-0.1
       return;
 
     cout << "Triggered!" << endl;
@@ -710,7 +711,7 @@ namespace ego_planner
     }
     else
       return;
-    cout << "2222222222222222222222"<<endl;
+    
     bool success = planner_manager_->planGlobalTrajWaypoints(odom_pos_, Eigen::Vector3d::Zero(),
                                                              Eigen::Vector3d::Zero(), wps,
                                                              Eigen::Vector3d::Zero(),
@@ -765,9 +766,12 @@ namespace ego_planner
     LocalTrajData *info = &planner_manager_->traj_.local_traj;
     double t_cur = ros::Time::now().toSec() - info->start_time;
 
-    start_pt_ = info->traj.getPos(t_cur);
-    start_vel_ = info->traj.getVel(t_cur);
-    start_acc_ = info->traj.getAcc(t_cur);
+    //start_pt_ = info->traj.getPos(t_cur);
+    //start_vel_ = info->traj.getVel(t_cur);
+    //start_acc_ = info->traj.getAcc(t_cur);
+    start_pt_ = odom_pos_;
+    start_vel_ = odom_vel_;
+    start_acc_.setZero();
 
     bool success = callReboundReplan(flag_use_poly_init, false, use_formation);
 
@@ -791,12 +795,15 @@ namespace ego_planner
     if (have_local_traj_ && use_formation)
     {
       desired_start_time = ros::Time::now().toSec() + replan_trajectory_time_;
-      desired_start_pt =
-          planner_manager_->traj_.local_traj.traj.getPos(desired_start_time - planner_manager_->traj_.local_traj.start_time);
-      desired_start_vel =
-          planner_manager_->traj_.local_traj.traj.getVel(desired_start_time - planner_manager_->traj_.local_traj.start_time);
-      desired_start_acc =
-          planner_manager_->traj_.local_traj.traj.getAcc(desired_start_time - planner_manager_->traj_.local_traj.start_time);
+      //desired_start_pt =
+      //    planner_manager_->traj_.local_traj.traj.getPos(desired_start_time - planner_manager_->traj_.local_traj.start_time);
+      //desired_start_vel =
+      //    planner_manager_->traj_.local_traj.traj.getVel(desired_start_time - planner_manager_->traj_.local_traj.start_time);
+      //desired_start_acc =
+      //    planner_manager_->traj_.local_traj.traj.getAcc(desired_start_time - planner_manager_->traj_.local_traj.start_time);
+      desired_start_pt = start_pt_;
+      desired_start_vel = start_vel_;
+      desired_start_acc = start_acc_;
     }
     else
     {

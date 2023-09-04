@@ -264,6 +264,11 @@ vector<Vector3d> AStar::getPath()
 
 vector<Vector3d> AStar::astarSearchAndGetSimplePath(const double step_size, Vector3d start_pt, Vector3d end_pt){
     // call astar search and get the path
+
+    //print input
+    cout << "start_pt: " << start_pt[0] <<" "<< start_pt[1] <<" "<< start_pt[2] << endl;
+    cout << "end_pt: " << end_pt[0] <<" "<< end_pt[1] <<" "<< end_pt[2] << endl;
+
     AstarSearch(step_size, start_pt, end_pt, true);
     vector<Vector3d> path = getPath();
     bool is_show_debug = false;

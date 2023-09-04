@@ -36,7 +36,7 @@ namespace ego_planner
     for (int i=0; i<formation_size_; i++)
       swarm_odom[i] = Eigen::Vector3d::Zero();
     
-    drone_0_odom_sub_ = nh.subscribe("/vins_estimator/odometry", 1, &PlanningVisualization::drone_0_odomeCallback, this);
+    drone_0_odom_sub_ = nh.subscribe("/drone_0_visual_slam/odom", 1, &PlanningVisualization::drone_0_odomeCallback, this);
     /*
     drone_1_odom_sub_ = nh.subscribe("/drone_1_visual_slam/odom", 1, &PlanningVisualization::drone_1_odomeCallback, this);
     drone_2_odom_sub_ = nh.subscribe("/drone_2_visual_slam/odom", 1, &PlanningVisualization::drone_2_odomeCallback, this);
@@ -111,7 +111,7 @@ namespace ego_planner
   void PlanningVisualization::drone_0_odomeCallback(const nav_msgs::OdometryConstPtr &msg){
     if (formation_size_ <=0 )
       return;
-    cout << "has odom" <<endl;
+    
     swarm_odom[0] << msg->pose.pose.position.x, msg->pose.pose.position.y, msg->pose.pose.position.z;
   }
 /*
